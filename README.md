@@ -7,48 +7,53 @@ This repository provides the implementation of an optimization framework for hyd
 ---
 
 ## ✨ Key Features
-- Multi-market integration: Co-optimizes participation in electricity, hydrogen (bundled and unbundled), and green certificate markets.  
-- Portfolio-level coordination: Unlocks flexibility by centrally scheduling distributed assets across multiple sites, beyond individual asset operation.  
-- Contractual heterogeneity: Supports both physical and virtual Power Purchase Agreements (PPAs) with take-as-produced structures.  
-- Policy compliance: Incorporates company-level green hydrogen targets, certification rules, and clean energy temporal matching constraints.  
-- Scalability: Applicable to hydrogen-centric companies of different sizes with multiple operational scenarios.  
+- Brownfield electrolysis integration: integrates renewable hydrogen production into existing refinery infrastructure, enabling progressive decarbonization while maintaining hydrogen supply reliability.
+- Detailed electrolysis modeling: Component-level representation of multi-stack electrolyzer operation, including variable efficiency, degradation dynamics, modular scheduling, and operational state transitions.
+- SMR–Electrolyzer synergy: Optimizes the interaction between conventional SMR production and renewable electrolysis to minimize hydrogen supply costs while reducing dependence on carbon-intensive generation.
+- How to deal with market and VRE exposure: Co-optimization of electrolyzer operation under renewable electricity procurement agreements and electricity spot market conditions to capture intermittency and price variability effects.
+- Scalability: A transferable optimization framework applicable to different industrial hydrogen systems, refinery configurations, electrolyzer sizes, and renewable energy scenarios.
 
 ---
 
 ## ⚙️ Model Highlights
-- Implemented as a day-ahead operational planning model.  
-- Objective function maximizes total company profit, considering hydrogen sales revenues, certificate transactions, electricity market exchanges, and PPA settlements.  
-- Captures asset-level technical constraints (electrolyzers, energy storage, renewable generation).  
-- Enables comparative analysis of different compliance strategies (per-site vs. portfolio-level enforcement).  
+- Developed as a techno-economic optimization framework for operational planning of hybrid refinery hydrogen systems.
+- Minimizes total hydrogen supply cost under strict demand constraints, integrating SMR production with grid-connected renewable electrolysis.
+- Captures detailed asset-level dynamics, including multi-stack electrolyzer operation, modular dispatch, efficiency variation, degradation effects, and operational state transitions.
+- Enables coordinated optimization under renewable electricity and market exposure, explicitly accounting for wind PPA supply, gas and electricity spot market interactions, and intermittency-driven operational variability.
 
 ---
 
 ## 🧪 Case Study
-The framework is demonstrated on a representative hydrogen-centric company (**H2FLEX**) operating five sites across Spain. Three operational setups are compared:  
-- **Case 1**: Each electrolyzer operates independently with its own PPA and individual green hydrogen target constraints.  
-- **Case 2**: PPAs are centrally dispatched among electrolyzers by the company operator, while green hydrogen target constraints are still enforced on each site individually.  
-- **Case 3**: Both PPAs and green hydrogen targets are managed at the portfolio level by the company operator.     
+The framework is demonstrated on a representative real-world refinery case study in Spain operating under electricity and gas spot market conditions, providing realistic insights into short-term operational flexibility. In this context the following sensitivity analyses have been performed:  
+- **1**: Electrolyzer size
+- **2**: Stack size
+- **1**: Hydrogen remuneration scheme
 
 ---
 
 ## 📊 Key Results
-- Centralized coordination enables up to a **2.42× increase in hydrogen production**.  
-- Achieves a **9.4% reduction in daily operational costs**.  
-- Portfolio-level enforcement improves flexibility, allowing **46.6% higher hydrogen production** while maintaining green hydrogen certification compliance.  
+- Up to **50% cost reduction** achieved by integrating electrolysis with SMR under favorable hydrogen pricing conditions.  
+- Optimal multi-stack scheduling requires uniform load distribution to minimize degradation and maintain operational flexibility..  
+- Hydrogen policy incentives dominate system economics, driving up to 57% LCOH variation and enabling 10–34% CO₂ reduction.  
+
+
 
 ---
 
 ## 📂 Repo Structure
 
 ```
-├─ H2FlexCo.ipynb                # Main Jupyter Notebook with the optimization model
-├─ H2FlexCo.py                   # Python version of the Main Jupyter Notebook
-├─ SimData.xlsx                  # Excel file containing the input simulation data
-└─ requirements.txt              # List of required Python packages
-├─ Cases/                    
-│  ├─ Case_1.ipynb               # Decentralized site-level operation
-│  ├─ Case_2.ipynb               # Centralized PPA dispatch
-│  └─ Case_3.ipynb               # Full portfolio-level coordination with centralized policy enforcement
+├─ components.py                # Electrolyzer polarization curve discretization 
+├─ Electrolyzer.py              # Alk model constraints
+├─ H2_storage.py                # Hydrogen storage model constraints
+├─ input_data.py                # csv reader 
+├─ main.py                      # main file to run the model
+├─ model_op_HYP_SOC.py          # components interactions and optimizer setup
+├─ NGreformer.xlsx              # SMR model constraints
+└─ plots.py                     # plotting script
+├─ data/                    
+│  ├─ EL_NG_CF_mrkt_h.csv       # electricity, natural gas market data and offshore wind capacity factor
+│  ├─ comp_size.py              # Component capacities
 ```
 
 ---
@@ -65,9 +70,10 @@ pip install -r requirements.txt
 
 ## 📈 How to Run
 
-1. Open `H2FlexCo.ipynb` in Jupyter Notebook or JupyterLab.
-2. Ensure `SimData.xlsx` is in the same directory as the notebook.
-3. Run all cells in the notebook to execute the model and generate results.
+1. Open `main.py` in Jupyter Notebook or JupyterLab.
+2. Ensure `EL_NG_CF_mrkt_h.csv` is in the "data" directory.
+3. Ensure `components.py`, `Electrolyzer.py`, `H2_storage.py`, `input_data.py`, `model_op_HYP_SOC.py`, `NGreformer.py`, and `plots.py` are in the same directory as the main file.
+4. Run all cells to execute the model and generate results.
 
 ---
 
@@ -78,15 +84,15 @@ The code uses the following libraries:
 - `pandas`
 - `numpy`
 - `matplotlib`
-- `seaborn`
-- `openpyxl`
+- `collections`
+- `scipy`
 
-You may also need a solver like GLPK or IPOPT for Pyomo.
+You also need a solver like GLPK or Gurobi for Pyomo.
 
 ## 📚 Citations
 If you use this repository in your work, please cite: 
 
-*Mansouri, S. A., & Bruninx, K. (2025). A Portfolio-Level Optimization Framework for Coordinated Market Participation and Operational Scheduling of Hydrogen-Centric Companies. IEEE International Conference on Energy Technologies for Future Grids.*
+*...*
 
 ---
 
